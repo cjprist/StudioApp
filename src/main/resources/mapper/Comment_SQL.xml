@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uncr.studioapp.mapper.comment.CommentMapper">
+    <insert id="addComment" parameterType="com.uncr.studioapp.domain.comment.CommentVO">
+        INSERT INTO studioex2.comment
+            (BOARD_ID, COMMENT_TIME, COMMENT_CONTENT, AGENT_ID)
+        VALUES
+            (#{boardID}, CURRENT_TIME, #{commentContent}, #{agentID})
+    </insert>
+    <select id="getComment" resultType="com.uncr.studioapp.domain.comment.CommentVO">
+        SELECT
+            COMMENT_ID AS commentID,
+            BOARD_ID AS boardID,
+            COMMENT_TIME AS commentTime,
+            COMMENT_CONTENT AS commentContent,
+            comment.AGENT_ID AS agentID,
+            AGENT_NICKNAME as agentNickname,
+            AGENT_URI as agentURI
+        FROM
+            studioex2.comment,
+            studioex2.agent
+        WHERE
+            BOARD_ID=#{boardID}
+        AND
+            agent.AGENT_ID=comment.AGENT_ID
+    </select>
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uncr.studioapp.mapper.board.BoardMapper">
+    <insert id="addBoard" parameterType="com.uncr.studioapp.domain.board.BoardAddVO">
+        INSERT INTO studioex2.board
+            (AGENT_ID, BOARD_TIME, CHANNEL_ID, BOARD_TITLE, BOARD_CONTENT, VIDEO_ID)
+        VALUES
+            (#{agentID},CURRENT_TIME, #{channelID}, #{boardTitle}, #{boardContent}, #{videoID});
+    </insert>
+    <insert id="addChannel" parameterType="com.uncr.studioapp.domain.channel.ChannelVO">
+        INSERT IGNORE INTO studioex2.channel
+            (CHANNEL_ID, CHANNEL_TITLE, CHANNEL_THUMBNAIL, CHANNEL_REGION)
+        VALUES
+            (#{channelID}, #{channelTitle}, #{channelThumbnail}, #{channelRegion})
+    </insert>
+    <insert id="likeBoard" parameterType="com.uncr.studioapp.domain.board.BoardLikeVO">
+        INSERT IGNORE INTO studioex2.`like` (BOARD_ID, AGENT_ID)
+        VALUES (#{boardID}, #{agentID})
+    </insert>
+    <delete id="unlikeBoard" parameterType="com.uncr.studioapp.domain.board.BoardLikeVO">
+        DELETE FROM studioex2.`like`
+        WHERE
+            BOARD_ID = #{boardID}
+        AND
+            AGENT_ID = #{agentID}
+    </delete>
+    <insert id="addVideo" parameterType="com.uncr.studioapp.domain.board.VideoVO">
+        INSERT IGNORE INTO studioex2.video
+            (VIDEO_ID, VIDEO_TUMBNAIL, VIDEO_CATEGORY)
+        VALUES
+            (#{videoID}, #{videoThumbnail}, #{videoCategory})
+    </insert>
+</mapper>

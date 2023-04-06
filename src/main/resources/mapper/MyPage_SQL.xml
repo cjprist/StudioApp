@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uncr.studioapp.mapper.mypage.MyPageMapper">
+    <select id="getMyBoard" resultType="com.uncr.studioapp.domain.board.BoardVO">
+        SELECT
+            b.BOARD_ID as boardID,
+            b.AGENT_ID as agentID,
+            a.AGENT_URI as agentURI,
+            a.AGENT_NICKNAME as agentNickname,
+            b.BOARD_TIME as boardTime,
+            b.BOARD_TITLE as boardTitle,
+            b.BOARD_CONTENT as boardContent,
+            b.CHANNEL_ID as channelID,
+            c.CHANNEL_TITLE as channelTitle,
+            c.CHANNEL_THUMBNAIL as channelThumbnail,
+            b.VIDEO_ID as videoID,
+            totalComments,
+            totalWatchers,
+            totalDuration,
+            totalLikes
+        FROM
+            board b
+                LEFT OUTER JOIN
+            (
+                SELECT
+                    board_ID,
+                    COUNT(comment.COMMENT_ID) as totalComments
+                FROM
+                    studioex2.`comment`
+                GROUP BY BOARD_ID
+            ) cm ON b.BOARD_ID= cm.BOARD_ID
+                LEFT OUTER JOIN
+            (
+                SELECT
+                    board_ID,
+                    COUNT(DISTINCT watch_log.AGENT_ID) AS totalWatchers,
+                    IFNULL(SUM(watch_log.WATCH_DURATION),0) AS totalDuration
+                FROM
+                    watch_log
+                GROUP BY BOARD_ID
+            ) watch_log
+            ON b.BOARD_ID= watch_log.BOARD_ID
+                LEFT OUTER JOIN
+            (
+                SELECT
+                    board_ID,
+                    COUNT(`like`.AGENT_ID) AS totalLikes
+                FROM
+                    studioex2.`like`
+                GROUP BY BOARD_ID
+            ) l ON b.BOARD_ID= l.BOARD_ID,
+            agent a,
+            studioex2.channel c
+        WHERE
+            b.AGENT_ID = a.AGENT_ID
+        AND
+            b.CHANNEL_ID = c.CHANNEL_ID
+        AND
+            b.AGENT_ID=#{agentID}
+        GROUP BY b.BOARD_ID
+    </select>
+    <select id="getAgentInfo" resultType="com.uncr.studioapp.domain.agent.AgentVO">
+        SELECT
+            AGENT_ID as agentID,
+            AGENT_URI as agentURI,
+            AGENT_NICKNAME as agentNickname
+        FROM
+            studioex2.agent
+        WHERE AGENT_ID=#{agentID}
+    </select>
+</mapper>

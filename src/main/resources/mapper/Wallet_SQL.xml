@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uncr.studioapp.mapper.wallet.WalletMapper">
+    <insert id="pairWallet" parameterType="com.uncr.studioapp.domain.wallet.WalletVO">
+        INSERT IGNORE INTO studioex2.wallet
+            (WALLET_ADDRESS, AGENT_ID)
+        VALUES
+            (#{walletAddress}, #{agentID})
+    </insert>
+    <select id="getWallet" resultType="com.uncr.studioapp.domain.wallet.WalletVO">
+        SELECT
+            WALLET_ADDRESS as walletAddress,
+            AGENT_ID as agentID
+        FROM
+            wallet
+        WHERE
+            WALLET_ADDRESS=#{walletAddress}
+    </select>
+</mapper>

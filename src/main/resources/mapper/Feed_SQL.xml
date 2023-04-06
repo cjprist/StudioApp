@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.uncr.studioapp.mapper.feed.FeedMapper">
+    <select id="getFeed" resultType="com.uncr.studioapp.domain.feed.FeedVO">
+        SELECT
+            b.BOARD_ID as boardID,
+            b.AGENT_ID as agentID,
+            a.AGENT_URI as agentURI,
+            a.AGENT_NICKNAME as agentNickname,
+            b.BOARD_TIME as boardTime,
+            b.BOARD_TITLE as boardTitle,
+            b.BOARD_CONTENT as boardContent,
+            b.CHANNEL_ID as channelID,
+            c.CHANNEL_TITLE as channelTitle,
+            c.CHANNEL_THUMBNAIL as channelThumbnail,
+            b.VIDEO_ID as videoID,
+            video.VIDEO_TUMBNAIL AS videoThumbnail,
+            video.VIDEO_CATEGORY AS videoCategory,
+            totalComments,
+            totalWatchers,
+            totalDuration,
+            totalLikes
+        FROM
+            board b
+                LEFT OUTER JOIN
+            (
+                SELECT
+                    board_ID,
+                    COUNT(comment.COMMENT_ID) as totalComments
+                FROM
+                    studioex2.`comment`
+                GROUP BY BOARD_ID
+            ) cm ON b.BOARD_ID= cm.BOARD_ID
+                LEFT OUTER JOIN
+            (
+                SELECT
+                    board_ID,
+                    COUNT(DISTINCT watch_log.AGENT_ID) AS totalWatchers,
+                    IFNULL(SUM(watch_log.WATCH_DURATION),0) AS totalDuration
+                FROM
+                    watch_log
+                GROUP BY BOARD_ID
+            ) watch_log
+            ON b.BOARD_ID= watch_log.BOARD_ID
+                LEFT OUTER JOIN
+            (
+                SELECT
+                    board_ID,
+                    COUNT(`like`.AGENT_ID) AS totalLikes
+                FROM
+                    studioex2.`like`
+                GROUP BY BOARD_ID
+            ) l ON b.BOARD_ID= l.BOARD_ID
+                LEFT OUTER JOIN studioex2.video ON b.VIDEO_ID= video.VIDEO_ID,
+            agent a,
+            studioex2.channel c
+        WHERE
+            b.AGENT_ID = a.AGENT_ID
+          AND
+            b.CHANNEL_ID = c.CHANNEL_ID
+        GROUP BY b.BOARD_ID
+    </select>
+    <select id="getMyDuration" resultType="com.uncr.studioapp.domain.feed.MyDurationDB">
+        SELECT
+            b.BOARD_ID as boardID,
+            IFNULL(SUM(w.WATCH_DURATION),0) as myDuration
+        FROM
+            board b
+                LEFT OUTER JOIN watch_log w ON b.BOARD_ID=w.BOARD_ID
+        WHERE
+            w.AGENT_ID=#{agentID}
+        GROUP BY b.BOARD_ID
+    </select>
+    <select id="getMyLike" resultType="com.uncr.studioapp.domain.feed.MyLikeDB">
+        SELECT
+            b.BOARD_ID as boardID,
+            EXISTS(SELECT l.AGENT_ID, b.BOARD_ID
+                   from board b LEFT OUTER JOIN `like` l on b.BOARD_ID = l.BOARD_ID
+                   where l.AGENT_ID=#{agentID} LIMIT 1) as myLike
+        FROM
+            board b
+                LEFT OUTER JOIN `like` l on b.BOARD_ID = l.BOARD_ID
+        WHERE
+            l.AGENT_ID=#{agentID}
+    </select>
+    <insert id="watchFeed" parameterType="com.uncr.studioapp.domain.feed.FeedWatchVO">
+        INSERT INTO studioex2.watch_log
+        (AGENT_ID, BOARD_ID, WATCH_DURATION, WATCH_TIME)
+        VALUES
+        (#{agentID}, #{boardID}, #{duration}, CURRENT_TIME)
+    </insert>
+</mapper>
