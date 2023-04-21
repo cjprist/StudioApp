@@ -2,6 +2,7 @@ package com.uncr.studioapp.service.board;
 
 import com.uncr.studioapp.domain.board.BoardAddVO;
 import com.uncr.studioapp.domain.board.BoardLikeVO;
+import com.uncr.studioapp.domain.board.SurfVO;
 import com.uncr.studioapp.domain.board.VideoVO;
 import com.uncr.studioapp.domain.channel.ChannelVO;
 import com.uncr.studioapp.mapper.board.BoardMapper;
@@ -39,5 +40,12 @@ public class BoardService {
 
     public void unlikeBoard(BoardLikeVO boardLikeVO) {
         boardMapper.unlikeBoard(boardLikeVO);
+    }
+
+    public void surfBoard(SurfVO surfVO) {
+        boardMapper.surfBoard(surfVO);
+
+        // TODO: 2023-04-21 Level 체크 기능 구현해야함
+
     }
 }

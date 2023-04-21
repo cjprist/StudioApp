@@ -2,6 +2,7 @@ package com.uncr.studioapp.controller.board;
 
 import com.uncr.studioapp.domain.board.BoardAddVO;
 import com.uncr.studioapp.domain.board.BoardLikeVO;
+import com.uncr.studioapp.domain.board.SurfVO;
 import com.uncr.studioapp.service.board.BoardService;
 import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.jdbc.Null;
@@ -46,6 +47,14 @@ public class BoardController {
             @RequestBody BoardLikeVO boardLikeVO
     ){
         boardService.unlikeBoard(boardLikeVO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, path = "/board/surf", produces = "application/json")
+    public ResponseEntity<Void> surfBoard(
+            @RequestBody SurfVO surfVO
+    ){
+        boardService.surfBoard(surfVO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

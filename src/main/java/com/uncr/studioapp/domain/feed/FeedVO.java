@@ -16,6 +16,7 @@ public class FeedVO {
     private String boardTitle;
     private String boardTime;
     private String boardContent;
+    private String youtubeComment;
     private String videoID;
     private String videoThumbnail;
     private String videoCategory;

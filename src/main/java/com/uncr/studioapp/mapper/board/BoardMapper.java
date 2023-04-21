@@ -2,6 +2,7 @@ package com.uncr.studioapp.mapper.board;
 
 import com.uncr.studioapp.domain.board.BoardAddVO;
 import com.uncr.studioapp.domain.board.BoardLikeVO;
+import com.uncr.studioapp.domain.board.SurfVO;
 import com.uncr.studioapp.domain.board.VideoVO;
 import com.uncr.studioapp.domain.channel.ChannelVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -16,4 +17,6 @@ public interface BoardMapper {
     void unlikeBoard(BoardLikeVO boardLikeVO);
 
     void addVideo(VideoVO videoVO);
+
+    void surfBoard(SurfVO surfVO);
 }

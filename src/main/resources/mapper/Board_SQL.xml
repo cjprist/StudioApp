@@ -3,9 +3,9 @@
 <mapper namespace="com.uncr.studioapp.mapper.board.BoardMapper">
     <insert id="addBoard" parameterType="com.uncr.studioapp.domain.board.BoardAddVO">
         INSERT INTO studioex2.board
-            (AGENT_ID, BOARD_TIME, CHANNEL_ID, BOARD_TITLE, BOARD_CONTENT, VIDEO_ID)
+            (AGENT_ID, BOARD_TIME, CHANNEL_ID, BOARD_TITLE, BOARD_CONTENT, VIDEO_ID, YOUTUBE_COMMENT)
         VALUES
-            (#{agentID},CURRENT_TIME, #{channelID}, #{boardTitle}, #{boardContent}, #{videoID});
+            (#{agentID},CURRENT_TIME, #{channelID}, #{boardTitle}, #{boardContent}, #{videoID}, #{youtubeComment});
     </insert>
     <insert id="addChannel" parameterType="com.uncr.studioapp.domain.channel.ChannelVO">
         INSERT IGNORE INTO studioex2.channel
@@ -29,5 +29,11 @@
             (VIDEO_ID, VIDEO_TUMBNAIL, VIDEO_CATEGORY)
         VALUES
             (#{videoID}, #{videoThumbnail}, #{videoCategory})
+    </insert>
+    <insert id="surfBoard" parameterType="com.uncr.studioapp.domain.board.SurfVO">
+        INSERT INTO studioex2.surf_log
+            (AGENT_ID, BOARD_ID, SURF_TIME)
+        VALUES
+            (#{agentID}, #{boardID}, CURRENT_TIME)
     </insert>
 </mapper>
