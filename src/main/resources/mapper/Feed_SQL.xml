@@ -11,6 +11,7 @@
             b.BOARD_TITLE as boardTitle,
             b.BOARD_CONTENT as boardContent,
             b.CHANNEL_ID as channelID,
+            b.YOUTUBE_COMMENT as youtubeComment,
             c.CHANNEL_TITLE as channelTitle,
             c.CHANNEL_THUMBNAIL as channelThumbnail,
             b.VIDEO_ID as videoID,

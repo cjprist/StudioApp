@@ -13,4 +13,5 @@ public class BoardAddVO {
     private String videoID;
     private String videoThumbnail;
     private String videoCategory;
+    private String youtubeComment;
 }
